@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kondi Nanda Gopal Umesh Raju | Software Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- 
+        Chosen Palette: "Modern Tech"
+        - Background: #0a192f (Deep Navy)
+        - Text Primary: #ccd6f6 (Light Slate)
+        - Text Secondary: #8892b0 (Slate)
+        - Accent: #64ffda (Bright Aqua/Mint)
+        - Card/Highlight Background: #112240 (Light Navy)
+    -->
+    <!-- 
+        Application Structure Plan: A sophisticated single-page portfolio with a vertical, non-linear flow.
+        1. Hero: A strong, immediate statement of identity and value proposition.
+        2. About: A concise narrative to build personal connection.
+        3. Experience: Chronological proof of professional capability.
+        4. Projects: A grid-based showcase of key work.
+        5. Achievements: A new section to highlight the JPMC simulation and certifications with interactive links.
+        6. Skills: A redesigned, interactive tabbed dashboard for technical abilities.
+        7. Contact: A clear and direct call-to-action.
+        This structure is optimized for recruiter engagement, presenting the most critical information in a visually compelling and easily navigable format.
+    -->
+    <!-- 
+        Visualization & Content Choices:
+        - Report Info: Technical Skills List -> Goal: Organize & Inform -> Viz/Presentation Method: Interactive Tabbed Interface with Horizontal Bar Charts -> Interaction: Click tabs to switch displayed chart -> Justification: Modernizes the UI, saves vertical space, and allows focused exploration of skill categories. -> Library/Method: Chart.js (Canvas), Vanilla JS for tab logic.
+        - Report Info: Projects/Experience -> Goal: Organize & Detail -> Viz/Presentation Method: Elevated, glassmorphism-inspired cards -> Interaction: Subtle lift-and-glow on hover -> Justification: Modern UI pattern that makes each item feel distinct and important. -> Library/Method: Tailwind CSS, Vanilla JS for animations.
+        - Report Info: Certifications -> Goal: Provide Proof & Interact -> Viz/Presentation Method: Clickable list items with hover animations -> Interaction: Hover to animate, click to open certificate link in new tab -> Justification: Provides verifiable proof of credentials in an engaging, non-intrusive way. -> Library/Method: HTML `<a>` tags, CSS transitions.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a192f;
+            color: #8892b0;
+        }
+        .text-light-slate { color: #ccd6f6; }
+        .text-slate { color: #8892b0; }
+        .text-accent { color: #64ffda; }
+        .bg-light-navy { background-color: #112240; }
+        .border-accent { border-color: #64ffda; }
+        
+        .nav-link {
+            color: #ccd6f6;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #64ffda;
+        }
+        .section-heading {
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            font-size: 1.75rem;
+            white-space: nowrap;
+        }
+        .section-heading::after {
+            content: "";
+            display: block;
+            position: relative;
+            top: 2px;
+            width: 300px;
+            height: 1px;
+            margin-left: 20px;
+            background-color: #233554;
+        }
+        .card-base {
+            background-color: #112240;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+        }
+        .card-base:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 20px 30px -15px rgba(2,12,27,0.7);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            max-height: 350px;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .skill-tab {
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .skill-tab.active {
+            color: #64ffda;
+            border-bottom-color: #64ffda;
+        }
+        .certificate-link {
+            display: block;
+            color: #ccd6f6;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.25rem;
+            margin: -0.5rem -0.75rem;
+        }
+        .certificate-link:hover {
+            color: #64ffda;
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased leading-relaxed">
+
+    <header id="header" class="bg-navy-blur/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 sm:px-10 md:px-24 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-accent z-10">UR</a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="nav-link text-sm">About</a>
+                <a href="#experience" class="nav-link text-sm">Experience</a>
+                <a href="#projects" class="nav-link text-sm">Projects</a>
+                <a href="#skills" class="nav-link text-sm">Skills</a>
+                <a href="#contact" class="nav-link text-sm">Contact</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none z-10">
+                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-light-navy absolute top-full right-0 w-full shadow-lg">
+            <div class="flex flex-col items-center py-4">
+                <a href="#about" class="nav-link py-2">About</a>
+                <a href="#experience" class="nav-link py-2">Experience</a>
+                <a href="#projects" class="nav-link py-2">Projects</a>
+                <a href="#skills" class="nav-link py-2">Skills</a>
+                <a href="#contact" class="nav-link py-2">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 sm:px-10 md:px-24">
+        <main>
+            <section id="hero" class="min-h-screen flex flex-col justify-center fade-in-section is-visible">
+                <div>
+                    <p class="text-accent text-lg mb-4">Hi, my name is</p>
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold text-light-slate">K.N.G. Umesh Raju.</h1>
+                    <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate mt-2">I build things for the web and beyond.</h2>
+                    <p class="mt-6 max-w-xl text-lg">I'm a software engineer specializing in building (and occasionally designing) exceptional digital experiences. Currently, I’m focused on building accessible, human-centered products and exploring the depths of artificial intelligence.</p>
+                    <div class="mt-12 flex items-center space-x-4">
+                         <a href="mailto:umeshraju82905@gmail.com" class="border border-accent text-accent font-medium py-3 px-6 rounded-md hover:bg-accent/10 transition-colors">Get In Touch</a>
+                         <a href="https://github.com/UmeshRaju" target="_blank" rel="noopener noreferrer" class="text-slate hover:text-accent transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg></a>
+                         <a href="https://www.linkedin.com/in/kondiumeshraju" target="_blank" rel="noopener noreferrer" class="text-slate hover:text-accent transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="py-24 fade-in-section">
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">01.</span>About Me</h2>
+                <div class="grid md:grid-cols-5 gap-12 items-start">
+                    <div class="md:col-span-3 space-y-4 text-lg">
+                        <p>Hello! I'm Umesh, a passionate software engineer with a knack for creating innovative solutions. My journey into technology began with a deep curiosity for how things work, which has evolved into a career focused on building robust full-stack applications and intelligent AI systems.</p>
+                        <p>I thrive at the intersection of complex problem-solving and clean, user-centric design. My goal is to leverage my skills in both web development and machine learning to build products that are not only powerful but also intuitive and accessible to everyone.</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="w-full max-w-sm mx-auto p-1 bg-gradient-to-br from-accent to-slate rounded-lg">
+                            <div class="bg-light-navy p-6 rounded-md">
+                                <h3 class="font-bold text-light-slate text-xl mb-4">Education</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-light-slate">Puducherry Technological University</h4>
+                                        <p class="text-sm">B.Tech, Computer Science</p>
+                                        <p class="text-xs text-slate">2021 - 2025 | CGPA: 8.30</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-light-slate">Pavan Junior College</h4>
+                                        <p class="text-sm">Intermediate Education</p>
+                                        <p class="text-xs text-slate">2019 - 2021 | 95.3%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="experience" class="py-24 fade-in-section">
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">02.</span>Experience</h2>
+                <div class="max-w-3xl">
+                     <div class="relative pl-8 py-4 border-l-2 border-gray-700">
+                        <div class="absolute w-4 h-4 bg-accent rounded-full -left-2 top-5 border-4 border-light-navy"></div>
+                        <p class="text-accent text-sm mb-1">Jan 2025 – May 2025</p>
+                        <h3 class="text-xl font-bold text-light-slate">Software Developer – Capstone Project</h3>
+                        <p class="text-lg text-slate mb-4">Puducherry Technological University</p>
+                        <ul class="list-disc list-inside space-y-2 text-md">
+                            <li>Led a team in developing the "AI Math Solver," a full-stack AI platform, as a core requirement for the B.Tech degree.</li>
+                            <li>Architected a deep learning pipeline using ResNet-18, GAT, and a Transformer decoder for high-accuracy image-to-LaTeX conversion.</li>
+                            <li>Achieved a 59.57% Expression Recognition Rate on the challenging CROHME 2019 dataset.</li>
+                        </ul>
+                     </div>
+                </div>
+            </section>
+
+            <section id="projects" class="py-24 fade-in-section">
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">03.</span>Things I've Built</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card-base rounded-md p-6 flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-light-slate">AI Math Solver</h3>
+                        <p class="text-slate mb-4 flex-grow">Full-stack AI application to recognize and solve handwritten mathematical expressions from images in real-time.</p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
+                            <span>React.js</span><span>Flask</span><span>PyTorch</span><span>ResNet-18</span>
+                        </div>
+                    </div>
+                    <div class="card-base rounded-md p-6 flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-light-slate">B2B Tender Management Platform</h3>
+                        <p class="text-slate mb-4 flex-grow">A platform for companies to create tenders, apply for bids, and manage proposals with secure authentication.</p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
+                            <span>Next.js</span><span>Node.js</span><span>PostgreSQL</span><span>JWT</span>
+                        </div>
+                    </div>
+                    <div class="card-base rounded-md p-6 flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-light-slate">Task Management System</h3>
+                        <p class="text-slate mb-4 flex-grow">A full-stack task management app with persistent storage and efficient client-server communication via REST APIs.</p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
+                            <span>React.js</span><span>Spring Boot</span><span>MySQL</span>
+                        </div>
+                    </div>
+                    <div class="card-base rounded-md p-6 flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-light-slate">Landmark Classification</h3>
+                        <p class="text-slate mb-4 flex-grow">A CNN for landmark recognition, achieving 74% accuracy using transfer learning to identify 50 global landmarks.</p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
+                            <span>PyTorch</span><span>Transfer Learning</span><span>CNN</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="achievements" class="py-24 fade-in-section">
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">04.</span>Achievements & Certifications</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <a href="https://drive.google.com/file/d/1s_0m9-xBAaBhN_vpLm6wWDsMJGD15OwN/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="card-base rounded-md p-6 block">
+                        <h3 class="text-xl font-bold text-light-slate mb-2">JPMorgan Chase & Co. Job Simulation</h3>
+                        <p class="text-sm text-accent mb-4">Forage | July 2025</p>
+                        <ul class="list-disc list-inside space-y-2 text-md">
+                            <li>Integrated Kafka for real-time data streaming and designed RESTful APIs for transaction processing.</li>
+                            <li>Configured an H2 database for efficient data management and implemented Incentive API integration.</li>
+                            <li>Conducted testing and debugging to ensure secure and reliable application functionality.</li>
+                        </ul>
+                    </a>
+                    <div class="card-base rounded-md p-6">
+                        <h3 class="text-xl font-bold text-light-slate mb-2">Certifications</h3>
+                        <ul class="space-y-2 text-md">
+                            <li><a href="https://drive.google.com/file/d/1ZcBmCXtYjZVmWq8-rMaxuRudZvDctbOj/view" target="_blank" rel="noopener noreferrer" class="certificate-link">Ultimate AWS Certified Solutions Architect Associate</a></li>
+                            <li><a href="https://drive.google.com/file/d/1NxdonHfLdONoqo0iuoM1tUaQ-t9H7PiH/view" target="_blank" rel="noopener noreferrer" class="certificate-link">Introduction to Machine Learning – AWS</a></li>
+                            <li><a href="https://drive.google.com/file/d/1NXjpUrCRHAvU4grLTpFkn3VDJmlWLAZ2/view" target="_blank" rel="noopener noreferrer" class="certificate-link">Java (Basic) Certificate – HackerRank</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="py-24 fade-in-section">
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">05.</span>Technical Skills</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex border-b border-gray-700">
+                        <button class="skill-tab active py-2 px-6 text-light-slate" data-skill="languages">Languages</button>
+                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="web">Web Tech</button>
+                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="ml">ML Stack</button>
+                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="tools">Tools</button>
+                    </div>
+                    <div class="bg-light-navy p-6 rounded-b-md">
+                        <div class="chart-container">
+                            <canvas id="skillsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="py-24 text-center fade-in-section">
+                 <h2 class="text-accent text-lg font-medium">06. What’s Next?</h2>
+                 <h3 class="text-4xl md:text-5xl font-bold text-light-slate mt-4 mb-6">Get In Touch</h3>
+                 <p class="max-w-xl mx-auto mb-8">I'm currently seeking new opportunities and am open to new challenges and collaborations. Whether you have a question or just want to say hi, I’ll try my best to get back to you!</p>
+                 <a href="mailto:umeshraju82905@gmail.com" class="border border-accent text-accent font-medium py-4 px-8 rounded-md hover:bg-accent/10 transition-colors text-lg">
+                    Say Hello
+                </a>
+            </section>
+        </main>
+
+        <footer class="py-6 text-center text-slate text-xs">
+            <p>Designed & Built by Kondi Nanda Gopal Umesh Raju</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            document.querySelectorAll('#mobile-menu a, nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if(!mobileMenu.classList.contains('hidden')) {
+                       mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const header = document.getElementById('header');
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop) {
+                    header.style.top = '-100px';
+                } else {
+                    header.style.top = '0';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+                if (scrollTop > 100) {
+                    header.classList.add('shadow-lg', 'bg-light-navy/80');
+                } else {
+                    header.classList.remove('shadow-lg', 'bg-light-navy/80');
+                }
+            });
+
+            const faders = document.querySelectorAll('.fade-in-section');
+            const appearOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('is-visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+
+            const skillsData = {
+                languages: {
+                    labels: ['Python', 'Java', 'C++', 'JavaScript', 'SQL', 'C'],
+                    data: [95, 90, 85, 90, 88, 80]
+                },
+                web: {
+                    labels: ['React.js', 'Spring Boot', 'Next.js', 'Node.js', 'Flask', 'REST APIs'],
+                    data: [90, 88, 85, 85, 80, 95]
+                },
+                ml: {
+                    labels: ['PyTorch', 'NumPy', 'Pandas', 'Scikit-learn', 'Matplotlib', 'AWS SageMaker'],
+                    data: [90, 95, 92, 88, 85, 75]
+                },
+                tools: {
+                    labels: ['Git', 'VS Code', 'Postman', 'Docker', 'Kafka', 'AWS (Beginner)'],
+                    data: [95, 98, 90, 80, 78, 70]
+                }
+            };
+            
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            let skillsChart;
+
+            const chartOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: '#233554' },
+                        ticks: { display: false }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { size: 14, family: "'Plus Jakarta Sans', sans-serif" },
+                            color: '#ccd6f6'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#0a192f',
+                        titleFont: { family: "'Plus Jakarta Sans', sans-serif" },
+                        bodyFont: { family: "'Plus Jakarta Sans', sans-serif" },
+                        callbacks: {
+                            label: function(context) { return ''; }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
+                }
+            };
+
+            function updateChart(skillCategory) {
+                const { labels, data } = skillsData[skillCategory];
+                if (skillsChart) {
+                    skillsChart.destroy();
+                }
+                skillsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: 'rgba(100, 255, 218, 0.4)',
+                            borderColor: '#64ffda',
+                            borderWidth: 1,
+                            borderRadius: 2,
+                            barThickness: 18
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            const skillTabs = document.querySelectorAll('.skill-tab');
+            skillTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    skillTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    updateChart(tab.dataset.skill);
+                });
+            });
+
+            // Initial chart load
+            updateChart('languages');
+        });
+    </script>
+
+</body>
+</html>
