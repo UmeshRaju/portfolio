@@ -22,16 +22,16 @@
         1. Hero: A strong, immediate statement of identity and value proposition.
         2. About: A concise narrative to build personal connection.
         3. Experience: Chronological proof of professional capability.
-        4. Projects: A grid-based showcase of key work.
-        5. Achievements: A new section to highlight the JPMC simulation and certifications with interactive links.
-        6. Skills: A redesigned, interactive tabbed dashboard for technical abilities.
+        4. Projects: A redesigned grid-based showcase where skills are directly tied to project outcomes.
+        5. Achievements: Highlights certifications and the JPMC simulation.
+        6. Skills: A new, visually organized grid of skill tags inspired by user feedback.
         7. Contact: A clear and direct call-to-action.
         This structure is optimized for recruiter engagement, presenting the most critical information in a visually compelling and easily navigable format.
     -->
     <!-- 
         Visualization & Content Choices:
-        - Report Info: Technical Skills List -> Goal: Organize & Inform -> Viz/Presentation Method: Interactive Tabbed Interface with Horizontal Bar Charts -> Interaction: Click tabs to switch displayed chart -> Justification: Modernizes the UI, saves vertical space, and allows focused exploration of skill categories. -> Library/Method: Chart.js (Canvas), Vanilla JS for tab logic.
-        - Report Info: Projects/Experience -> Goal: Organize & Detail -> Viz/Presentation Method: Elevated, glassmorphism-inspired cards -> Interaction: Subtle lift-and-glow on hover -> Justification: Modern UI pattern that makes each item feel distinct and important. -> Library/Method: Tailwind CSS, Vanilla JS for animations.
+        - Report Info: Projects/Experience -> Goal: Organize & Detail -> Viz/Presentation Method: Elevated cards with prominent technology tags -> Interaction: Subtle lift-and-glow on hover -> Justification: Modern UI pattern that directly links skills to tangible projects, which is highly effective for recruiters. -> Library/Method: Tailwind CSS.
+        - Report Info: Technical Skills List -> Goal: Provide a quick keyword reference -> Viz/Presentation Method: A categorized grid of skill "pills" or "tags" -> Interaction: None, designed for maximum scannability -> Justification: Complements the project section by providing a simple, honest list of competencies without ambiguous ratings. -> Library/Method: Tailwind CSS.
         - Report Info: Certifications -> Goal: Provide Proof & Interact -> Viz/Presentation Method: Clickable list items with hover animations -> Interaction: Hover to animate, click to open certificate link in new tab -> Justification: Provides verifiable proof of credentials in an engaging, non-intrusive way. -> Library/Method: HTML `<a>` tags, CSS transitions.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
@@ -82,12 +82,6 @@
             transform: translateY(-7px);
             box-shadow: 0 20px 30px -15px rgba(2,12,27,0.7);
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            max-height: 350px;
-        }
         .fade-in-section {
             opacity: 0;
             transform: translateY(20px);
@@ -96,14 +90,6 @@
         .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
-        }
-        .skill-tab {
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .skill-tab.active {
-            color: #64ffda;
-            border-bottom-color: #64ffda;
         }
         .certificate-link {
             display: block;
@@ -116,6 +102,19 @@
         .certificate-link:hover {
             color: #64ffda;
             background-color: rgba(100, 255, 218, 0.1);
+        }
+        .tech-tag {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+        }
+        .skill-pill {
+            background-color: #112240;
+            border: 1px solid #233554;
+            transition: all 0.3s ease;
+        }
+        .skill-pill:hover {
+            transform: translateY(-3px);
+            border-color: #64ffda;
         }
     </style>
 </head>
@@ -184,6 +183,11 @@
                                         <p class="text-sm">Intermediate Education</p>
                                         <p class="text-xs text-slate">2019 - 2021 | 95.3%</p>
                                     </div>
+                                    <div>
+                                        <h4 class="font-bold text-light-slate">Narayana E-Techno School</h4>
+                                        <p class="text-sm">SSC (10th Class)</p>
+                                        <p class="text-xs text-slate">May 2019 | CGPA: 9.8 / 10.0</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -200,9 +204,9 @@
                         <h3 class="text-xl font-bold text-light-slate">Software Developer – Capstone Project</h3>
                         <p class="text-lg text-slate mb-4">Puducherry Technological University</p>
                         <ul class="list-disc list-inside space-y-2 text-md">
-                            <li>Led a team in developing the "AI Math Solver," a full-stack AI platform, as a core requirement for the B.Tech degree.</li>
-                            <li>Architected a deep learning pipeline using ResNet-18, GAT, and a Transformer decoder for high-accuracy image-to-LaTeX conversion.</li>
-                            <li>Achieved a 59.57% Expression Recognition Rate on the challenging CROHME 2019 dataset.</li>
+                            <li>Led a team to develop this capstone project, fulfilling a core requirement for the B.Tech in Computer Science degree.</li>
+                            <li>Architected a full-stack AI platform that recognizes and solves complex handwritten mathematical expressions in real-time.</li>
+                            <li>Engineered a ResNet-18, GAT, and Transformer pipeline, achieving a **59.57% ExpRate** on the CROHME2019 dataset.</li>
                         </ul>
                      </div>
                 </div>
@@ -214,29 +218,45 @@
                     <div class="card-base rounded-md p-6 flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-light-slate">AI Math Solver</h3>
                         <p class="text-slate mb-4 flex-grow">Full-stack AI application to recognize and solve handwritten mathematical expressions from images in real-time.</p>
-                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
-                            <span>React.js</span><span>Flask</span><span>PyTorch</span><span>ResNet-18</span>
+                        <div class="flex flex-wrap gap-2 text-xs mt-auto">
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">React.js</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Flask</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">PyTorch</span>
                         </div>
                     </div>
                     <div class="card-base rounded-md p-6 flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-light-slate">B2B Tender Management Platform</h3>
                         <p class="text-slate mb-4 flex-grow">A platform for companies to create tenders, apply for bids, and manage proposals with secure authentication.</p>
-                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
-                            <span>Next.js</span><span>Node.js</span><span>PostgreSQL</span><span>JWT</span>
+                        <div class="flex flex-wrap gap-2 text-xs mt-auto">
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Next.js</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Node.js</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">PostgreSQL</span>
                         </div>
                     </div>
                     <div class="card-base rounded-md p-6 flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-light-slate">Task Management System</h3>
                         <p class="text-slate mb-4 flex-grow">A full-stack task management app with persistent storage and efficient client-server communication via REST APIs.</p>
-                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
-                            <span>React.js</span><span>Spring Boot</span><span>MySQL</span>
+                        <div class="flex flex-wrap gap-2 text-xs mt-auto">
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">React.js</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Spring Boot</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">MySQL</span>
+                        </div>
+                    </div>
+                     <div class="card-base rounded-md p-6 flex flex-col">
+                        <h3 class="text-xl font-bold mb-2 text-light-slate">Automated Book Publication Workflow</h3>
+                        <p class="text-slate mb-4 flex-grow">Engineered a Python pipeline to automate scraping, rewriting, and versioning of book chapters.</p>
+                        <div class="flex flex-wrap gap-2 text-xs mt-auto">
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Python</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Playwright</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">Gemini API</span>
                         </div>
                     </div>
                     <div class="card-base rounded-md p-6 flex flex-col">
                         <h3 class="text-xl font-bold mb-2 text-light-slate">Landmark Classification</h3>
                         <p class="text-slate mb-4 flex-grow">A CNN for landmark recognition, achieving 74% accuracy using transfer learning to identify 50 global landmarks.</p>
-                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate mt-auto">
-                            <span>PyTorch</span><span>Transfer Learning</span><span>CNN</span>
+                        <div class="flex flex-wrap gap-2 text-xs mt-auto">
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">PyTorch</span>
+                            <span class="tech-tag font-medium py-1 px-3 rounded-full">CNN</span>
                         </div>
                     </div>
                 </div>
@@ -266,17 +286,47 @@
             </section>
 
             <section id="skills" class="py-24 fade-in-section">
-                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">05.</span>Technical Skills</h2>
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex border-b border-gray-700">
-                        <button class="skill-tab active py-2 px-6 text-light-slate" data-skill="languages">Languages</button>
-                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="web">Web Tech</button>
-                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="ml">ML Stack</button>
-                        <button class="skill-tab py-2 px-6 text-light-slate" data-skill="tools">Tools</button>
+                <h2 class="section-heading text-light-slate font-bold"><span class="text-accent text-2xl mr-2">05.</span>My Skills</h2>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-x-12 gap-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-light-slate mb-4 border-b-2 border-accent pb-2">Frontend</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">React.js</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Next.js</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">JavaScript</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">HTML</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">CSS</span>
+                        </div>
                     </div>
-                    <div class="bg-light-navy p-6 rounded-b-md">
-                        <div class="chart-container">
-                            <canvas id="skillsChart"></canvas>
+                    <div>
+                        <h3 class="text-xl font-semibold text-light-slate mb-4 border-b-2 border-accent pb-2">Backend</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Spring Boot</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Node.js</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Flask</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">REST APIs</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Kafka</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-light-slate mb-4 border-b-2 border-accent pb-2">Languages & Databases</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Python</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Java</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">C++</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">SQL</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">MySQL</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">C</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-light-slate mb-4 border-b-2 border-accent pb-2">AI & Machine Learning</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">PyTorch</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">NumPy & Pandas</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Scikit-learn</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">Gemini API</span>
+                            <span class="skill-pill font-medium py-2 px-4 rounded-md text-slate">AWS SageMaker</span>
                         </div>
                     </div>
                 </div>
@@ -351,98 +401,6 @@
             faders.forEach(fader => {
                 appearOnScroll.observe(fader);
             });
-
-            const skillsData = {
-                languages: {
-                    labels: ['Python', 'Java', 'C++', 'JavaScript', 'SQL', 'C'],
-                    data: [95, 90, 85, 90, 88, 80]
-                },
-                web: {
-                    labels: ['React.js', 'Spring Boot', 'Next.js', 'Node.js', 'Flask', 'REST APIs'],
-                    data: [90, 88, 85, 85, 80, 95]
-                },
-                ml: {
-                    labels: ['PyTorch', 'NumPy', 'Pandas', 'Scikit-learn', 'Matplotlib', 'AWS SageMaker'],
-                    data: [90, 95, 92, 88, 85, 75]
-                },
-                tools: {
-                    labels: ['Git', 'VS Code', 'Postman', 'Docker', 'Kafka', 'AWS (Beginner)'],
-                    data: [95, 98, 90, 80, 78, 70]
-                }
-            };
-            
-            const ctx = document.getElementById('skillsChart').getContext('2d');
-            let skillsChart;
-
-            const chartOptions = {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        grid: { color: '#233554' },
-                        ticks: { display: false }
-                    },
-                    y: {
-                        grid: { display: false },
-                        ticks: {
-                            font: { size: 14, family: "'Plus Jakarta Sans', sans-serif" },
-                            color: '#ccd6f6'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#0a192f',
-                        titleFont: { family: "'Plus Jakarta Sans', sans-serif" },
-                        bodyFont: { family: "'Plus Jakarta Sans', sans-serif" },
-                        callbacks: {
-                            label: function(context) { return ''; }
-                        }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeInOutQuart'
-                }
-            };
-
-            function updateChart(skillCategory) {
-                const { labels, data } = skillsData[skillCategory];
-                if (skillsChart) {
-                    skillsChart.destroy();
-                }
-                skillsChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: 'rgba(100, 255, 218, 0.4)',
-                            borderColor: '#64ffda',
-                            borderWidth: 1,
-                            borderRadius: 2,
-                            barThickness: 18
-                        }]
-                    },
-                    options: chartOptions
-                });
-            }
-
-            const skillTabs = document.querySelectorAll('.skill-tab');
-            skillTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    skillTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    updateChart(tab.dataset.skill);
-                });
-            });
-
-            // Initial chart load
-            updateChart('languages');
         });
     </script>
 
